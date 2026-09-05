@@ -6,21 +6,21 @@
   <meta name="theme-color" content="#ffffff" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="styles.css" />
-  <title>Kitchen Grocery Assistant</title>
+  <title>Kitchen + Home Assistant</title>
 </head>
 <body>
   <div id="app">
     <header class="topbar">
       <div>
-        <h1>Kitchen Grocery Assistant</h1>
-        <p id="status">Ready</p>
+        <h1>Kitchen + Home Assistant</h1>
+        <p id="status">Groceries, toiletries, cleaning supplies & more</p>
       </div>
       <button id="voiceBtn" class="voice-btn" aria-label="Voice command">🎙️</button>
     </header>
 
     <nav class="tabs" aria-label="Main navigation">
       <button data-tab="list" class="active">Shopping List</button>
-      <button data-tab="inventory">Inventory</button>
+      <button data-tab="inventory">Food Inventory</button>
       <button data-tab="recipes">Recipes</button>
       <button data-tab="planner">Meal Planner</button>
       <button data-tab="family">Family</button>
@@ -29,16 +29,23 @@
 
     <main>
       <section id="tab-list" class="tab-panel active">
-        <div class="panel-header"><h2>Shopping List</h2><button id="addListItem">+ Add item</button></div>
-        <form id="quickAddForm" class="quick-add">
-          <input id="quickAddInput" placeholder="Add milk, vanilla ice cream, paper towels..." autocomplete="off" />
+        <div class="panel-header">
+          <div><h2>Shopping List</h2><p class="section-note">Keep groceries and household purchases together, organized by category.</p></div>
+          <button id="addCategoryBtn">+ Category</button>
+        </div>
+
+        <form id="quickAddForm" class="quick-add quick-add-categorized">
+          <input id="quickAddInput" placeholder="Add milk, toothpaste, bleach, batteries..." autocomplete="off" />
+          <select id="categorySelect" aria-label="Shopping category"></select>
           <button>Add</button>
         </form>
-        <ul id="shoppingList" class="item-list"></ul>
+
+        <div id="categoryFilters" class="category-filters" aria-label="Shopping category filters"></div>
+        <div id="shoppingGroups" class="shopping-groups"></div>
       </section>
 
       <section id="tab-inventory" class="tab-panel">
-        <div class="panel-header"><h2>Inventory</h2><button id="addInventoryItem">+ Add item</button></div>
+        <div class="panel-header"><h2>Food Inventory</h2><button id="addInventoryItem">+ Add item</button></div>
         <div class="location-grid">
           <div class="location-card"><h3>Refrigerator</h3><ul id="fridgeList" class="item-list compact"></ul></div>
           <div class="location-card"><h3>Freezer</h3><ul id="freezerList" class="item-list compact"></ul></div>
@@ -75,6 +82,16 @@
       </section>
     </main>
   </div>
+
+  <dialog id="categoryDialog">
+    <form id="categoryForm">
+      <h2>Add shopping category</h2>
+      <p>Create anything you want: Pet Supplies, Hardware, School Supplies, Costco, etc.</p>
+      <label>Category name<input id="categoryNameInput" required placeholder="Pet Supplies" /></label>
+      <label>Icon or emoji<input id="categoryIconInput" maxlength="8" placeholder="🐾" /></label>
+      <menu><button type="button" id="cancelCategory">Cancel</button><button type="submit">Add category</button></menu>
+    </form>
+  </dialog>
 
   <dialog id="authDialog">
     <form method="dialog" id="authForm">
