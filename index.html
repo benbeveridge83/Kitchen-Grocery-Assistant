@@ -34,23 +34,18 @@
           <div><h2>Shopping List</h2><p class="section-note">Keep groceries and household purchases together, organized by category.</p></div>
           <button id="addCategoryBtn">+ Category</button>
         </div>
-
         <form id="quickAddForm" class="quick-add quick-add-categorized">
           <input id="quickAddInput" placeholder="Add milk, toothpaste, bleach, batteries..." autocomplete="off" />
           <select id="categorySelect" aria-label="Shopping category"></select>
           <button>Add</button>
         </form>
-
         <div id="categoryFilters" class="category-filters" aria-label="Shopping category filters"></div>
         <div id="shoppingGroups" class="shopping-groups"></div>
       </section>
 
       <section id="tab-scan" class="tab-panel">
         <div class="panel-header">
-          <div>
-            <h2>Camera / Product Scan</h2>
-            <p class="section-note">Point the rear camera at a product barcode. Motion Watch can detect when you move something in front of the wall-mounted phone.</p>
-          </div>
+          <div><h2>Camera / Product Scan</h2><p class="section-note">Point the rear camera at a product barcode. Motion Watch can detect movement in front of the wall-mounted phone.</p></div>
         </div>
         <div class="scanner-shell">
           <div class="camera-stage">
@@ -66,15 +61,13 @@
             <button id="motionToggle">Motion Watch: Off</button>
           </div>
           <div id="motionStatus" class="scan-status">Motion Watch is off.</div>
-
           <div class="manual-barcode">
             <input id="manualBarcode" inputmode="numeric" placeholder="Or enter barcode number" />
             <button id="lookupBarcode">Look up</button>
           </div>
-
           <div id="scanResult" class="scan-result">
             <h3>Waiting for a product</h3>
-            <p>Hold a barcode steady inside the box. If the product database does not know it, you can type the product name yourself.</p>
+            <p>Hold a barcode steady inside the box. If the product database does not know it, type the product name yourself.</p>
             <label>Product name<input id="scanProductName" placeholder="Product name" /></label>
             <label>Category<select id="scanCategorySelect"></select></label>
             <div class="scanner-controls">
@@ -95,33 +88,10 @@
         </div>
       </section>
 
-      <section id="tab-recipes" class="tab-panel">
-        <div class="panel-header"><h2>Recipes</h2><button id="addRecipe">+ Add recipe</button></div>
-        <div id="recipeCards" class="card-grid"></div>
-      </section>
-
-      <section id="tab-planner" class="tab-panel">
-        <div class="panel-header"><h2>Meal Planner</h2><button id="planMeal">+ Plan meal</button></div>
-        <div id="mealCalendar" class="calendar-grid"></div>
-      </section>
-
-      <section id="tab-family" class="tab-panel">
-        <div class="panel-header"><h2>Family Preferences</h2><button id="addFamilyMember">+ Add person</button></div>
-        <div id="familyCards" class="card-grid"></div>
-      </section>
-
-      <section id="tab-cook" class="tab-panel">
-        <div class="cook-shell">
-          <div>
-            <h2>Cook Mode</h2>
-            <p>Voice controls: “pause”, “play”, “go back 20 seconds”, “next step”, “how much garlic?”</p>
-          </div>
-          <div class="video-placeholder">Recipe video / projector controls</div>
-          <div class="cook-controls">
-            <button>⏪ 20s</button><button>▶ Play / Pause</button><button>Next step ➜</button>
-          </div>
-        </div>
-      </section>
+      <section id="tab-recipes" class="tab-panel"><div class="panel-header"><h2>Recipes</h2><button id="addRecipe">+ Add recipe</button></div><div id="recipeCards" class="card-grid"></div></section>
+      <section id="tab-planner" class="tab-panel"><div class="panel-header"><h2>Meal Planner</h2><button id="planMeal">+ Plan meal</button></div><div id="mealCalendar" class="calendar-grid"></div></section>
+      <section id="tab-family" class="tab-panel"><div class="panel-header"><h2>Family Preferences</h2><button id="addFamilyMember">+ Add person</button></div><div id="familyCards" class="card-grid"></div></section>
+      <section id="tab-cook" class="tab-panel"><div class="cook-shell"><div><h2>Cook Mode</h2><p>Voice controls: “pause”, “play”, “go back 20 seconds”, “next step”, “how much garlic?”</p></div><div class="video-placeholder">Recipe video / projector controls</div><div class="cook-controls"><button>⏪ 20s</button><button>▶ Play / Pause</button><button>Next step ➜</button></div></div></section>
     </main>
   </div>
 
@@ -136,5 +106,6 @@
   </dialog>
 
   <script type="module" src="app.js"></script>
+  <script type="module" src="scanner.js"></script>
 </body>
 </html>
