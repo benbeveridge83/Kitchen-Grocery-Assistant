@@ -96,12 +96,45 @@
   <dialog id="authDialog">
     <form method="dialog" id="authForm">
       <h2>Sign in</h2>
-      <p>Enter your email and we’ll send a secure sign-in link.</p>
-      <input id="emailInput" type="email" required placeholder="you@example.com" />
-      <menu><button value="cancel">Later</button><button id="sendMagicLink" value="default">Send link</button></menu>
+      <p>Use your password on this dedicated device. Once signed in, this phone will stay signed in unless you clear its browser data or sign out.</p>
+      <label>Email<input id="emailInput" type="email" required placeholder="you@example.com" autocomplete="username" /></label>
+      <label>Password<input id="passwordInput" type="password" placeholder="Password" autocomplete="current-password" /></label>
+      <p id="authMessage" class="section-note"></p>
+      <menu>
+        <button value="cancel">Later</button>
+        <button type="button" id="passwordSignIn">Sign in</button>
+        <button id="sendMagicLink" value="default" title="Fallback only">Email link</button>
+      </menu>
     </form>
   </dialog>
 
   <script type="module" src="app.js"></script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+    const supabase = createClient(
+      'https://ucpfgcobgnizuzdqftbx.supabase.co',
+      'sb_publishable_gbMManqnyeTw2JGd7AHECA_7GcGwvo8'
+    );
+    const button = document.getElementById('passwordSignIn');
+    const message = document.getElementById('authMessage');
+    button?.addEventListener('click', async () => {
+      const email = document.getElementById('emailInput').value.trim();
+      const password = document.getElementById('passwordInput').value;
+      if (!email || !password) {
+        message.textContent = 'Enter both your email and password.';
+        return;
+      }
+      button.disabled = true;
+      message.textContent = 'Signing in…';
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        message.textContent = error.message;
+        button.disabled = false;
+        return;
+      }
+      message.textContent = 'Signed in. Loading your household…';
+      window.location.reload();
+    });
+  </script>
 </body>
 </html>
