@@ -1,5 +1,5 @@
-const CACHE='kitchen-grocery-v3';
-const ASSETS=['./','./index.html','./styles.css','./app.js','./manifest.webmanifest'];
+const CACHE='kitchen-grocery-v4';
+const ASSETS=['./','./index.html','./styles.css','./app.js','./scanner.js','./scanner-bridge.js','./manifest.webmanifest'];
 
 self.addEventListener('install', event => {
   self.skipWaiting();
