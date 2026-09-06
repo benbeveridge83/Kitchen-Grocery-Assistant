@@ -20,6 +20,7 @@
 
     <nav class="tabs" aria-label="Main navigation">
       <button data-tab="list" class="active">Shopping List</button>
+      <button data-tab="scan">📷 Scan</button>
       <button data-tab="inventory">Food Inventory</button>
       <button data-tab="recipes">Recipes</button>
       <button data-tab="planner">Meal Planner</button>
@@ -42,6 +43,47 @@
 
         <div id="categoryFilters" class="category-filters" aria-label="Shopping category filters"></div>
         <div id="shoppingGroups" class="shopping-groups"></div>
+      </section>
+
+      <section id="tab-scan" class="tab-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Camera / Product Scan</h2>
+            <p class="section-note">Point the rear camera at a product barcode. Motion Watch can detect when you move something in front of the wall-mounted phone.</p>
+          </div>
+        </div>
+        <div class="scanner-shell">
+          <div class="camera-stage">
+            <video id="cameraVideo" autoplay playsinline muted></video>
+            <div class="scan-frame" aria-hidden="true"></div>
+            <div id="cameraPlaceholder" class="camera-placeholder">Tap “Start camera” and allow camera access.</div>
+          </div>
+          <canvas id="motionCanvas" width="64" height="48" hidden></canvas>
+          <div class="scanner-controls">
+            <button id="startCamera">Start camera</button>
+            <button id="stopCamera">Stop</button>
+            <button id="switchCamera">Switch camera</button>
+            <button id="motionToggle">Motion Watch: Off</button>
+          </div>
+          <div id="motionStatus" class="scan-status">Motion Watch is off.</div>
+
+          <div class="manual-barcode">
+            <input id="manualBarcode" inputmode="numeric" placeholder="Or enter barcode number" />
+            <button id="lookupBarcode">Look up</button>
+          </div>
+
+          <div id="scanResult" class="scan-result">
+            <h3>Waiting for a product</h3>
+            <p>Hold a barcode steady inside the box. If the product database does not know it, you can type the product name yourself.</p>
+            <label>Product name<input id="scanProductName" placeholder="Product name" /></label>
+            <label>Category<select id="scanCategorySelect"></select></label>
+            <div class="scanner-controls">
+              <button id="addScannedShopping" disabled>Add to shopping list</button>
+              <button id="addScannedInventory" disabled>Add to inventory</button>
+            </div>
+            <small id="scanMeta"></small>
+          </div>
+        </div>
       </section>
 
       <section id="tab-inventory" class="tab-panel">
