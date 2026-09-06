@@ -17,39 +17,79 @@ function enableScanActions(enabled) {
   if (b) b.disabled = !enabled;
 }
 
-function setProduct(name, barcode = '') {
+function setProduct(name, barcode = '', metaText = '') {
   const input = byId('scanProductName');
   if (input) input.value = name || '';
   const meta = byId('scanMeta');
-  if (meta) meta.textContent = barcode ? `Barcode: ${barcode}` : '';
+  if (meta) meta.textContent = metaText || (barcode ? `Barcode: ${barcode}` : '');
   enableScanActions(Boolean(name));
+}
+
+async function lookupOpenFoodFacts(code) {
+  const response = await fetch(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(code)}.json`);
+  const data = await response.json();
+  const p = data?.product;
+  if (data?.status === 1 && p) {
+    return {
+      retailer: 'fallback',
+      productId: '',
+      upc: code,
+      name: p.product_name || p.generic_name || p.brands || `Barcode ${code}`,
+      brand: p.brands || '',
+      size: p.quantity || '',
+      price: null
+    };
+  }
+  return null;
 }
 
 async function lookupBarcode(code) {
   if (!code) return;
   const meta = byId('scanMeta');
-  if (meta) meta.textContent = `Looking up ${code}...`;
+  if (meta) meta.textContent = `Looking up ${code} at Kroger...`;
   enableScanActions(false);
+  window.KrogerLastProduct = null;
+
   try {
-    const response = await fetch(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(code)}.json`);
-    const data = await response.json();
-    const p = data?.product;
-    if (data?.status === 1 && p) {
-      const name = p.product_name || p.generic_name || p.brands || `Barcode ${code}`;
-      setProduct(name, code);
+    let product = null;
+    let krogerConfigured = false;
+
+    if (window.KitchenRetailer) {
+      try {
+        const cfg = await window.KitchenRetailer.config();
+        krogerConfigured = Boolean(cfg?.configured);
+        if (krogerConfigured) product = await window.KitchenRetailer.lookupBarcode(code);
+      } catch (e) {
+        console.warn('Kroger lookup unavailable', e);
+      }
+    }
+
+    if (!product) {
+      product = await lookupOpenFoodFacts(code).catch(() => null);
+    }
+
+    if (product) {
+      window.KrogerLastProduct = product.retailer === 'kroger' ? product : null;
+      const details = [
+        product.retailer === 'kroger' ? 'Kroger' : (krogerConfigured ? 'Fallback database' : 'Product database'),
+        product.brand,
+        product.size,
+        product.price != null ? `$${Number(product.price).toFixed(2)}` : '',
+        `Barcode: ${code}`
+      ].filter(Boolean).join(' • ');
+      setProduct(product.name, code, details);
       const title = byId('scanResult')?.querySelector('h3');
-      if (title) title.textContent = 'Product found';
-      setStatus(`Found ${name}.`);
+      if (title) title.textContent = product.retailer === 'kroger' ? 'Kroger product found' : 'Product found';
+      setStatus(`Found ${product.name}${product.retailer === 'kroger' ? ' at Kroger' : ''}.`);
+      window.dispatchEvent(new CustomEvent('kroger-product-found', { detail: product }));
     } else {
-      setProduct('', code);
+      setProduct('', code, `Barcode ${code} was not found. Type the product name.`);
       const title = byId('scanResult')?.querySelector('h3');
       if (title) title.textContent = 'Barcode found - name it';
-      if (meta) meta.textContent = `Barcode ${code} was not in the product database.`;
       byId('scanProductName')?.focus();
     }
   } catch (e) {
-    setProduct('', code);
-    if (meta) meta.textContent = 'Barcode detected, but product lookup failed. Type the product name.';
+    setProduct('', code, 'Barcode detected, but product lookup failed. Type the product name.');
   }
 }
 
